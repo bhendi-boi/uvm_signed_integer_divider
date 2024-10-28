@@ -3,6 +3,7 @@ import uvm_pkg::*;
 `include "uvm_macros.svh"
 `include "seq_item.sv"
 `include "sequence.sv"
+`include "monitor.sv"
 `include "driver.sv"
 `include "agent.sv"
 `include "environment.sv"

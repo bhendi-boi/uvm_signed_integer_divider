@@ -37,9 +37,7 @@ class driver extends uvm_driver #(transaction);
     vif.rst <= 1;
     forever begin
       seq_item_port.get_next_item(tr);
-      `uvm_info("Driver d", "time", UVM_NONE)
       drive(tr);
-      `uvm_info("Driver d", "time", UVM_NONE)
       `uvm_info("Driver", "Drove this transaction", UVM_NONE)
       tr.print();
       seq_item_port.item_done();

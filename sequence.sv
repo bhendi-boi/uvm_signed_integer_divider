@@ -9,13 +9,12 @@ class base_sequence extends uvm_sequence;
 
   task body();
     tr = transaction::type_id::create("tr");
-    repeat (2) begin
+    repeat (5) begin
       start_item(tr);
       tr.randomize() with {
         rst == 1;
         start == 1;
         divisor == 32'd2;
-        dividend == 32'd4;
       };
       finish_item(tr);
     end
