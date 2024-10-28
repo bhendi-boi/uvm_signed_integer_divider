@@ -19,19 +19,29 @@ class driver extends uvm_driver #(transaction);
 
   task drive(transaction tr);
     @(posedge vif.clk);
-    vif.rst <= tr.rst;
-    vif.start <= tr.start;
+    vif.start <= 1;
     vif.divisor <= tr.divisor;
     vif.dividend <= tr.dividend;
-
+    @(posedge vif.ready);
+    vif.start <= 0;
   endtask
 
 
   task run_phase(uvm_phase phase);
+    vif.rst <= 0;
+    vif.quotient <= 0;
+    vif.remainder <= 0;
+    vif.divisor <= 0;
+    vif.dividend <= 0;
+    @(negedge vif.clk);
+    vif.rst <= 1;
     forever begin
       seq_item_port.get_next_item(tr);
+      `uvm_info("Driver d", "time", UVM_NONE)
       drive(tr);
-      `uvm_info("Driver", $sformatf("Driving this transaction: %s", tr.sprint()), UVM_NONE)
+      `uvm_info("Driver d", "time", UVM_NONE)
+      `uvm_info("Driver", "Drove this transaction", UVM_NONE)
+      tr.print();
       seq_item_port.item_done();
     end
   endtask

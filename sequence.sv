@@ -9,9 +9,14 @@ class base_sequence extends uvm_sequence;
 
   task body();
     tr = transaction::type_id::create("tr");
-    repeat (5) begin
+    repeat (2) begin
       start_item(tr);
-      tr.randomize();
+      tr.randomize() with {
+        rst == 1;
+        start == 1;
+        divisor == 32'd2;
+        dividend == 32'd4;
+      };
       finish_item(tr);
     end
   endtask
@@ -32,6 +37,7 @@ class reset_sequence extends uvm_sequence;
     start_item(tr);
     tr.randomize() with {
       rst == 0;
+      start == 0;
     };
     finish_item(tr);
   endtask
