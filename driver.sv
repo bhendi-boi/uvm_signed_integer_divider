@@ -1,40 +1,40 @@
 class driver extends uvm_driver #(transaction);
-    `uvm_component_utils(driver)
+  `uvm_component_utils(driver)
 
-    transaction tr;
-    virtual divider_intf vif;
+  transaction tr;
+  virtual divider_intf vif;
 
-    function new(string name="driver",uvm_component parent);
-        super.new(name,parent);
-    endfunction
+  function new(string name = "driver", uvm_component parent);
+    super.new(name, parent);
+  endfunction
 
-    function void build_phase(uvm_phase phase);
-        super.build_phase(phase);
+  function void build_phase(uvm_phase phase);
+    super.build_phase(phase);
 
-        tr = transaction::get_id::create("tr");
-        if(!uvm_config_db#(virtual divider_intf)::get(this,"","vif",vif)) begin
-            `uvm_fatal("Driver", "Can't retriver vif in driver!")
-        end
-    endfunction
+    tr = transaction::type_id::create("tr");
+    if (!uvm_config_db#(virtual divider_intf)::get(this, "", "vif", vif)) begin
+      `uvm_fatal("Driver", "Can't retriver vif in driver!")
+    end
+  endfunction
 
-    task drive(transaction tr);
-        @(posedge clk);
-        vif.rst <= tr.rst;
-        vif.start <= tr.start;
-        vif.divisor <= tr.divisor;
-        vif.dividend <= tr.dividend;
+  task drive(transaction tr);
+    @(posedge vif.clk);
+    vif.rst <= tr.rst;
+    vif.start <= tr.start;
+    vif.divisor <= tr.divisor;
+    vif.dividend <= tr.dividend;
 
-    endtask
+  endtask
 
 
-    task run_phase(uvm_phase phase);
-        forever begin
-            seq_item_port.get_next_item(tr);
-            drive(tr);
-            tr.print("Driver")
-            seq_item_port.item_done();
-        end
-    endtask
+  task run_phase(uvm_phase phase);
+    forever begin
+      seq_item_port.get_next_item(tr);
+      drive(tr);
+      `uvm_info("Driver", $sformatf("Driving this transaction: %s", tr.sprint()), UVM_NONE)
+      seq_item_port.item_done();
+    end
+  endtask
 
 endclass
 
