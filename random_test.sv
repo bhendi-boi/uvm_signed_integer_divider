@@ -17,8 +17,10 @@ class random_test extends uvm_test;
     phase.raise_objection(this);
 
     base_seq = base_sequence::type_id::create("base_seq");
+    quo_seq  = quotient_sequence::type_id::create("quo_seq");
 
     base_seq.start(env.agnt.seqr);
+    `uvm_info("Random Test", "Base Sequence over", UVM_NONE)
     phase.drop_objection(this);
   endtask
 

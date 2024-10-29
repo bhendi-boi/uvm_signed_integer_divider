@@ -9,36 +9,18 @@ class base_sequence extends uvm_sequence;
 
   task body();
     tr = transaction::type_id::create("tr");
-    repeat (5) begin
+    tr.div_is_multiple_of_2.constraint_mode(0);
+    repeat (250) begin
       start_item(tr);
-      tr.randomize() with {
-        rst == 1;
-        start == 1;
-        divisor == 32'd2;
-      };
+      tr.randomize();
       finish_item(tr);
     end
-  endtask
-
-endclass
-
-class reset_sequence extends uvm_sequence;
-  `uvm_object_utils(reset_sequence)
-
-  transaction tr;
-
-  function new(string name = "reset_sequence");
-    super.new(name);
-  endfunction
-
-  task body();
-    tr = transaction::type_id::create("tr");
-    start_item(tr);
-    tr.randomize() with {
-      rst == 0;
-      start == 0;
-    };
-    finish_item(tr);
+    tr.div_msb_is_zero.constraint_mode(0);
+    repeat (250) begin
+      start_item(tr);
+      tr.randomize();
+      finish_item(tr);
+    end
   endtask
 
 endclass
