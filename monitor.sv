@@ -21,9 +21,8 @@ class monitor extends uvm_monitor;
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
     wait (vif.rst);
-    @(posedge vif.clk);
     forever begin
-      @(posedge vif.clk);
+      @(posedge vif.start);
       tr.divisor  = vif.divisor;
       tr.dividend = vif.dividend;
       @(posedge vif.ready);
